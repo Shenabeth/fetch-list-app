@@ -1,6 +1,6 @@
 # fetch-list-app
 
-This Android application retrieves and displays hiring data from a JSON file, grouped by listId and sorted by name.
+This Android application retrieves and displays data from a JSON file, grouped by listId and sorted by name.
 
 ## Features
 - Loads data from a local JSON file
@@ -20,7 +20,7 @@ This Android application retrieves and displays hiring data from a JSON file, gr
 ## Setup & Installation
 
 1. Clone this repository:
-git clone https://github.com/yourusername/fetch-list-app.git
+```git clone https://github.com/yourusername/fetch-list-app.git```
 
 2. Open the project in Android Studio:
 - Launch Android Studio
