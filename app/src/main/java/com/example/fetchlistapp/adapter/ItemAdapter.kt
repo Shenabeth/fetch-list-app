@@ -11,126 +11,125 @@ import com.example.fetchlistapp.model.Item
 import com.example.fetchlistapp.model.ItemGroup
 
 /**
- * Adapter for the outer RecyclerView which displays a list of item groups.
- * Each item group includes a listId and a nested RecyclerView of individual items.
+ * This adapter controls the outer RecyclerView.
+ * It shows a list of groups. Each group includes a title (listId)
+ * and a nested inner RecyclerView with the group’s items.
  */
 class ItemGroupAdapter : RecyclerView.Adapter<ItemGroupAdapter.GroupViewHolder>() {
 
-    // Backing list for all item groups shown in the outer RecyclerView
+    // Holds all the item groups to be shown in the outer RecyclerView
     private var itemGroups: List<ItemGroup> = emptyList()
 
     /**
-     * Replaces the current list of item groups with new data and refreshes the view.
-     * @param newItemGroups The new list of grouped items to display.
+     * This function updates the outer list with new groups.
+     * It takes a list of ItemGroup objects and refreshes the UI.
      */
     fun updateData(newItemGroups: List<ItemGroup>) {
         this.itemGroups = newItemGroups
-        notifyDataSetChanged()
+        notifyDataSetChanged() // tells RecyclerView to redraw the screen
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): GroupViewHolder {
-        // Inflate the layout for an item group (outer RecyclerView item)
+        // create and return a ViewHolder for a group item layout (item_group.xml)
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_group, parent, false)
         return GroupViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: GroupViewHolder, position: Int) {
-        // Bind the item group data at the given position to the ViewHolder
+        // connect the group at this position to the ViewHolder
         val itemGroup = itemGroups[position]
         holder.bind(itemGroup)
     }
 
-    override fun getItemCount(): Int = itemGroups.size
+    override fun getItemCount(): Int = itemGroups.size // get number of groups in the list
 
     /**
-     * ViewHolder class representing one group of items.
-     * Each group shows a listId and a nested list of items in its own RecyclerView.
+     * ViewHolder for each item group.
+     * It shows the group’s listId as a title and includes a nested RecyclerView of that group’s items.
      */
     class GroupViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        // UI references to group title and nested RecyclerView
+        // create views for the group title and the inner list of items
         private val groupTitleTextView: TextView = itemView.findViewById(R.id.groupTitleTextView)
         private val itemsRecyclerView: RecyclerView = itemView.findViewById(R.id.itemsRecyclerView)
 
-        // Adapter for the inner RecyclerView that shows individual items
+        // adapter for the inner RecyclerView
         private val itemAdapter = ItemAdapter()
 
         /**
-         * Binds the group-level data and sets up the nested RecyclerView.
-         * @param itemGroup A single group of items with the same listId.
+         * Displays one group’s title and sets up its inner RecyclerView of items.
          */
         fun bind(itemGroup: ItemGroup) {
-            // Set the group title using the listId
+            // set the text like "List ID: 1"
             groupTitleTextView.text = buildString {
                 append("List ID: ")
                 append(itemGroup.listId)
             }
 
-            // Configure the nested RecyclerView for items
+            // set up the inner RecyclerView with vertical scrolling and link the adapter
             itemsRecyclerView.apply {
                 layoutManager = LinearLayoutManager(itemView.context)
                 adapter = itemAdapter
             }
 
-            // Pass the group's items to the inner adapter
+            // give the inner adapter the actual list of items in this group
             itemAdapter.updateData(itemGroup.items)
         }
     }
 }
 
 /**
- * Adapter for the inner RecyclerView which displays the individual items
- * that belong to a specific group (shown in the outer RecyclerView).
+ * This adapter controls the inner RecyclerView that shows the actual items inside each group.
  */
 class ItemAdapter : RecyclerView.Adapter<ItemAdapter.ItemViewHolder>() {
 
-    // List of items to display within a single group
+    // create list of items that belong to one group
     private var items: List<Item> = emptyList()
 
     /**
-     * Updates the adapter's item list and notifies the UI to refresh.
-     * @param newItems A new list of items for this group.
+     * This function updates the inner list of items.
+     * It takes a new list of Item objects and refreshes the UI.
      */
     fun updateData(newItems: List<Item>) {
         this.items = newItems
-        notifyDataSetChanged()
+        notifyDataSetChanged() // refresh the inner RecyclerView
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        // Inflate the layout for a single item row
+        // create and return a ViewHolder for a single item row (item_row.xml)
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_row, parent, false)
         return ItemViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        // Bind item data at the given position to the ViewHolder
+        // show the item at this position in the ViewHolder
         val item = items[position]
         holder.bind(item)
     }
 
-    override fun getItemCount(): Int = items.size
+    override fun getItemCount(): Int = items.size // get number of items in the group
 
     /**
-     * ViewHolder for a single item row within a group.
-     * Displays the item's name and its ID.
+     * ViewHolder for one item.
+     * Shows the item’s name and ID.
      */
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        // UI references for the item name and ID text views
+        // create views that show the item’s name and ID
         private val itemNameTextView: TextView = itemView.findViewById(R.id.itemNameTextView)
         private val itemIdTextView: TextView = itemView.findViewById(R.id.itemIdTextView)
 
         /**
-         * Binds a single item's data to the row.
-         * @param item The item object containing name and ID info.
+         * Displays a single item’s name and ID in the row.
          */
         fun bind(item: Item) {
-            // Show item name if not null, else show blank
+            // if the item has a name, show it
+            // if not, show blank
             itemNameTextView.text = item.name ?: ""
 
-            // Show item ID prefixed with "ID:"
+            // show the item ID
             itemIdTextView.text = buildString {
                 append("ID: ")
                 append(item.id)
